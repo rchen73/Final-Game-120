@@ -1,7 +1,7 @@
 // Play Scene
-class Play extends Phaser.Scene {
+class SecondLevel extends Phaser.Scene {
     constructor() {
-        super("Play");
+        super("SecondLevel");
     }
 
     preload() {
@@ -26,21 +26,14 @@ class Play extends Phaser.Scene {
         // define platforms
         var platforms = this.physics.add.staticGroup()
         platforms.create(200, 640, 'ground');
-        platforms.create(500, 520, 'ground');
-        platforms.create(750, 420, 'ground');
-        platforms.create(1100, 320, 'ground');
-        platforms.create(250, 320, 'ground');
-        platforms.create(60, 220, 'ground');
+        platforms.create(450, 640, 'ground');
+        platforms.create(700, 640, 'ground');
+        platforms.create(950, 640, 'ground');
+        platforms.create(1200, 520, 'ground');
+        platforms.create(950, 400, 'ground');
+        platforms.create(350, 400, 'ground');
 
         this.touchGround = this.physics.add.collider(this.player, platforms);
-
-        // next scene
-        this.teleport = this.physics.add.sprite(800, 100, "ground");
-        this.teleport.body.setImmovable(true);
-
-        this.physics.add.overlap(this.player, this.teleport, function () {
-            nextTrue = true;
-        });
     }
 
     update() {
@@ -74,10 +67,6 @@ class Play extends Phaser.Scene {
                 this.player.jumpState == 0;
                 this.player.jumpCount = 1;
             }
-        }
-
-        if (nextTrue) {
-            this.scene.start('SecondLevel');
         }
     }
 };
