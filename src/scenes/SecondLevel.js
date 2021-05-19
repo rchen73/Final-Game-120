@@ -26,12 +26,12 @@ class SecondLevel extends Phaser.Scene {
         // define platforms
         var platforms = this.physics.add.staticGroup()
         platforms.create(200, 640, 'ground');
-        platforms.create(450, 640, 'ground');
-        platforms.create(700, 640, 'ground');
+        platforms.create(600, 640, 'ground');
         platforms.create(950, 640, 'ground');
         platforms.create(1200, 520, 'ground');
         platforms.create(950, 400, 'ground');
         platforms.create(350, 400, 'ground');
+        platforms.create(100, 280, 'ground');
 
         this.touchGround = this.physics.add.collider(this.player, platforms);
     }
