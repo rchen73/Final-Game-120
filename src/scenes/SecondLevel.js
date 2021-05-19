@@ -68,5 +68,9 @@ class SecondLevel extends Phaser.Scene {
                 this.player.jumpCount = 1;
             }
         }
+
+        if (this.player.y > game.config.height) {
+            this.scene.start('Play');
+        }
     }
 };
