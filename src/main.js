@@ -12,4 +12,4 @@ let game = new Phaser.Game(config);
 
 let spaceBar, keyLeft, keyRight;
 
-var nextTrue = false;
+var nextTrue, level;

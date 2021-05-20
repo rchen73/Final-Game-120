@@ -7,16 +7,22 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.image("ghost", "./assets/ghost.png");
         this.load.image("ground", "./assets/ground.png");
+        this.load.image('background', './assets/background.png');
         this.load.audio("jump", "./assets/Gun.wav");
     }
 
     create() {
+        let bg = this.add.image(0, 0, 'background').setOrigin(0, 0);
+        
         // define player 
         this.player = this.physics.add.sprite(200, 380, "ghost");
         this.player.setGravityY(900);
         this.player.setCollideWorldBounds(true);
         this.player.jumpState = 0;
         this.player.jumpCount = 1;
+
+        this.cameras.main.setBounds(0, 0, bg.displayWidth, game.config.displayHeight);
+        this.cameras.main.startFollow(this.player);
 
         // define keys
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -38,9 +44,12 @@ class Play extends Phaser.Scene {
         this.teleport = this.physics.add.sprite(800, 100, "ground");
         this.teleport.body.setImmovable(true);
 
+        nextTrue = false;
         this.physics.add.overlap(this.player, this.teleport, function () {
             nextTrue = true;
         });
+
+        level = 1;
     }
 
     update() {
@@ -76,7 +85,8 @@ class Play extends Phaser.Scene {
             }
         }
 
-        if (nextTrue) {
+        if(nextTrue && level == 1) {
+            level = 2;
             this.scene.start('SecondLevel');
         }
     }
