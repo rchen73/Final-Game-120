@@ -1,18 +1,19 @@
-// Play Scene
-class Play extends Phaser.Scene {
+// FirstLevel Scene
+class FirstLevel extends Phaser.Scene {
     constructor() {
-        super("Play");
+        super("FirstLevel");
     }
 
     preload() {
         this.load.image("ghost", "./assets/ghost.png");
         this.load.image("ground", "./assets/ground.png");
-        this.load.image('background', './assets/background.png');
+        this.load.image('firstBG', './assets/firstBG.png');
         this.load.audio("jump", "./assets/Gun.wav");
+        this.load.image('candle', "./assets/candle.png");
     }
 
     create() {
-        let bg = this.add.image(0, 0, 'background').setOrigin(0, 0);
+        let bg = this.add.image(0, 0, 'firstBG').setOrigin(0, 0);
         
         // define player 
         this.player = this.physics.add.sprite(200, 380, "ghost");
@@ -43,6 +44,14 @@ class Play extends Phaser.Scene {
         // next scene
         this.teleport = this.physics.add.sprite(800, 100, "ground");
         this.teleport.body.setImmovable(true);
+        visible = 0;
+        this.teleport.alpha = visible;
+
+        this.candle = this.physics.add.sprite(80, 170, "candle");
+        this.candle.body.setImmovable(true);
+        this.physics.add.overlap(this.player, this.candle, function () {
+            visible = 1;
+        });
 
         nextTrue = false;
         this.physics.add.overlap(this.player, this.teleport, function () {

@@ -28,7 +28,7 @@ class Title extends Phaser.Scene {
 
     update() {
         if (Phaser.Input.Keyboard.JustDown(spaceBar)) {
-            this.scene.start('Play');    
+            this.scene.start('FirstLevel');    
         }
     }
 }

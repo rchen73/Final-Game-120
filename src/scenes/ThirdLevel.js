@@ -1,7 +1,7 @@
-// SecondLevel Scene
-class SecondLevel extends Phaser.Scene {
+// ThirdLevel Scene
+class ThirdLevel extends Phaser.Scene {
     constructor() {
-        super("SecondLevel");
+        super("ThirdLevel");
     }
 
     preload() {
@@ -78,14 +78,14 @@ class SecondLevel extends Phaser.Scene {
             }
         }
 
-        if(nextTrue && level == 2) {
+        /*if(nextTrue && level == 2) {
             level = 3;
-            this.scene.start('ThirdLevel');
-        }
+            this.scene.start('SecondLevel');
+        }*/
 
-        if (this.player.y > 600 && level == 2) {
-            level = 1;
-            this.scene.start('FirstLevel');
+        if (this.player.y > 600 && level == 3) {
+            level = 2;
+            this.scene.start('SecondLevel');
         }
     }
 };
