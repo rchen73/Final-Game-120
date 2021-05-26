@@ -9,7 +9,7 @@ class SecondLevel extends Phaser.Scene {
 
     create() {
         // define player 
-        this.player = this.physics.add.sprite(200, 380, "ghost");
+        this.player = this.physics.add.sprite(220, 550, "player");
         this.player.setGravityY(900);
         this.player.setCollideWorldBounds(true);
         this.player.jumpState = 0;
@@ -21,16 +21,16 @@ class SecondLevel extends Phaser.Scene {
         keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         // define platforms
-        var platforms = this.physics.add.staticGroup()
+        var platforms = this.physics.add.staticGroup();
         platforms.create(200, 640, 'ground');
         platforms.create(600, 640, 'ground');
-        platforms.create(950, 640, 'ground');
-        platforms.create(1220, 520, 'ground');
-        platforms.create(920, 400, 'ground');
+        platforms.create(750, 640, 'ground');
+        platforms.create(920, 520, 'ground');
+        platforms.create(720, 400, 'ground');
         platforms.create(320, 400, 'ground');
         platforms.create(60, 280, 'ground');
         platforms.create(60, 520, 'ground');
-        platforms.create(1200, 280, 'ground');
+        platforms.create(1000, 280, 'ground');
 
         this.touchGround = this.physics.add.collider(this.player, platforms);
 
@@ -83,7 +83,7 @@ class SecondLevel extends Phaser.Scene {
             this.scene.start('ThirdLevel');
         }
 
-        if (this.player.y > 600 && level == 2) {
+        if (this.player.y > 700 && level == 2) {
             level = 1;
             this.scene.start('FirstLevel');
         }

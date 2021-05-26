@@ -5,52 +5,99 @@ class FirstLevel extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("ghost", "./assets/ghost.png");
+        this.load.image("player", "./assets/player.png");
         this.load.image("ground", "./assets/ground.png");
-        this.load.image('firstBG', './assets/firstBG.png');
+        this.load.image("firstBG", "./assets/firstBG.png");
         this.load.audio("jump", "./assets/Gun.wav");
-        this.load.image('candle', "./assets/candle.png");
+        this.load.image("candle", "./assets/candle.png");
+        this.load.image("wall", "./assets/wall.png");
+        this.load.spritesheet('left', './assets/left.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('right', './assets/right.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('attackLeft', './assets/attackLeft.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('attackRight', './assets/attackRight.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 9});
     }
 
     create() {
         let bg = this.add.image(0, 0, 'firstBG').setOrigin(0, 0);
         
         // define player 
-        this.player = this.physics.add.sprite(200, 380, "ghost");
+        this.player = this.physics.add.sprite(50, 600, "player");
         this.player.setGravityY(900);
         this.player.setCollideWorldBounds(true);
         this.player.jumpState = 0;
         this.player.jumpCount = 1;
+        this.player.direction = 1;
 
-        this.cameras.main.setBounds(0, 0, bg.displayWidth, game.config.displayHeight);
-        this.cameras.main.startFollow(this.player);
+        this.anims.create({
+            key: 'idleLeft',
+            frames: [{key: 'left', frame: 0}],
+            frameRate: 20
+        });
+
+        this.anims.create({
+            key: 'idleRight',
+            frames: [{key: 'right', frame: 0}],
+            frameRate: 20
+        });
+
+        this.anims.create({
+            key: 'moveLeft',
+            frames: this.anims.generateFrameNumbers('left', {start: 0, end: 9, first: 0}),
+            frameRate: 20,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'moveRight',
+            frames: this.anims.generateFrameNumbers('right', {start: 0, end: 9, first: 0}),
+            frameRate: 20,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'attackLight',
+            frames: this.anims.generateFrameNumbers('attackLeft', {start: 0, end: 9, first: 0}),
+            frameRate: 20,
+        });
+
+        this.anims.create({
+            key: 'attackRight',
+            frames: this.anims.generateFrameNumbers('attackRight', {start: 0, end: 9, first: 0}),
+            frameRate: 20,
+        });
 
         // define keys
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
         // define platforms
-        var platforms = this.physics.add.staticGroup()
-        platforms.create(200, 640, 'ground');
-        platforms.create(500, 520, 'ground');
+        var platforms = this.physics.add.staticGroup();
+        platforms.create(550, 820, 'ground').setScale(10).refreshBody().setDepth(-1);
+        platforms.create(320, 640, 'ground');
+        platforms.create(550, 520, 'ground');
         platforms.create(750, 420, 'ground');
-        platforms.create(1100, 320, 'ground');
-        platforms.create(250, 320, 'ground');
-        platforms.create(60, 220, 'ground');
+        platforms.create(880, 320, 'ground');
+        platforms.create(420, 300, 'ground');
+        platforms.create(330, 200, 'ground');
 
         this.touchGround = this.physics.add.collider(this.player, platforms);
+
+        var walls = this.physics.add.staticGroup();
+        walls.create(240, 330, 'wall');
+        walls.create(980, 330, 'wall');
 
         // next scene
         this.teleport = this.physics.add.sprite(800, 100, "ground");
         this.teleport.body.setImmovable(true);
-        visible = 0;
-        this.teleport.alpha = visible;
+        visible = false;
+        this.teleport.setVisible(visible);
 
-        this.candle = this.physics.add.sprite(80, 170, "candle");
+        this.candle = this.physics.add.sprite(350, 150, "candle");
         this.candle.body.setImmovable(true);
         this.physics.add.overlap(this.player, this.candle, function () {
-            visible = 1;
+            visible = true;
         });
 
         nextTrue = false;
@@ -65,12 +112,21 @@ class FirstLevel extends Phaser.Scene {
         // left/right movement
         if(keyLeft.isDown) {
             this.player.setVelocityX(-400);
+            this.player.anims.play('moveLeft');
+            this.player.direction = 0;
         } else if(keyRight.isDown) {
             this.player.setVelocityX(400);
+            this.player.anims.play('moveRight');
+            this.player.direction = 1;
         }
 
         if(!keyLeft.isDown && !keyRight.isDown) {
             this.player.setVelocityX(0);
+            /*if(this.player.direction == 0) {
+                this.player.anims.play('idleLeft');
+            } else if(this.player.direction == 1) {
+                this.player.anims.play('idleRight');
+            }*/
         }
 
         // jump logic
@@ -92,6 +148,14 @@ class FirstLevel extends Phaser.Scene {
                 this.player.jumpState == 0;
                 this.player.jumpCount = 1;
             }
+        }
+
+        if(keyA.isDown) {
+            this.player.anims.play('attackRight');
+        }
+
+        if(visible) {
+            this.teleport.setVisible(visible);
         }
 
         if(nextTrue && level == 1) {

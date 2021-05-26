@@ -1,7 +1,7 @@
 let config = {
     type: Phaser.AUTO,
-    width: 1280,
-    height: 720,
+    width: 1170,
+    height: 780,
     scene: [Title, FirstLevel, SecondLevel, ThirdLevel],
     physics: {
         default: "arcade"
@@ -10,6 +10,6 @@ let config = {
 
 let game = new Phaser.Game(config);
 
-let spaceBar, keyLeft, keyRight;
+let spaceBar, keyLeft, keyRight, keyA;
 
 var visible, nextTrue, level;
