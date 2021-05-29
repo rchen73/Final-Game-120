@@ -4,7 +4,10 @@ let config = {
     height: 780,
     scene: [Title, FirstLevel, SecondLevel, ThirdLevel],
     physics: {
-        default: "arcade"
+        default: "arcade",
+        arcade: {
+            debug: true
+        }
     }
 }
 

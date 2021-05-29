@@ -15,13 +15,18 @@ class FirstLevel extends Phaser.Scene {
         this.load.spritesheet('right', './assets/right.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 9});
         this.load.spritesheet('attackLeft', './assets/attackLeft.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 9});
         this.load.spritesheet('attackRight', './assets/attackRight.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('jumpLeft', './assets/jumpLeft.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 6});
+        this.load.spritesheet('jumpRight', './assets/jumpRight.png', {frameWidth: 100, frameHeight: 100, startFrame: 0, endFrame: 6});
     }
 
     create() {
         let bg = this.add.image(0, 0, 'firstBG').setOrigin(0, 0);
         
         // define player 
-        this.player = this.physics.add.sprite(50, 600, "player");
+        this.player = new Player(this, 70, 500, 'player');
+        this.player.setCollideWorldBounds(true);
+        this.player.setGravityY(900);
+        /*this.player = this.physics.add.sprite(50, 600, "player");
         this.player.setGravityY(900);
         this.player.setCollideWorldBounds(true);
         this.player.jumpState = 0;
@@ -57,14 +62,28 @@ class FirstLevel extends Phaser.Scene {
         this.anims.create({
             key: 'attackLight',
             frames: this.anims.generateFrameNumbers('attackLeft', {start: 0, end: 9, first: 0}),
-            frameRate: 20,
+            frameRate: 20
         });
 
         this.anims.create({
             key: 'attackRight',
             frames: this.anims.generateFrameNumbers('attackRight', {start: 0, end: 9, first: 0}),
-            frameRate: 20,
+            frameRate: 20
         });
+
+        this.anims.create({
+            key: 'jumpLeft',
+            frames: this.anims.generateFrameNumbers('jumpLeft', {start: 0, end: 6, first: 0}),
+            frameRate: 20,
+            repeate: -1
+        });
+
+        this.anims.create({
+            key: 'jumpRight',
+            frames: this.anims.generateFrameNumbers('jumpRight', {start: 0, end: 6, first: 0}),
+            frameRate: 20,
+            repeat: -1
+        });*/
 
         // define keys
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -109,32 +128,46 @@ class FirstLevel extends Phaser.Scene {
     }
 
     update() {
+        this.player.update();
         // left/right movement
-        if(keyLeft.isDown) {
+        /*if(keyLeft.isDown) {
             this.player.setVelocityX(-400);
-            this.player.anims.play('moveLeft');
             this.player.direction = 0;
         } else if(keyRight.isDown) {
             this.player.setVelocityX(400);
-            this.player.anims.play('moveRight');
             this.player.direction = 1;
+        }
+
+        if(Phaser.Input.Keyboard.JustDown(keyLeft)) {
+            this.player.anims.play('moveLeft');
+        } else if(Phaser.Input.Keyboard.JustDown(keyRight)) {
+            this.player.anims.play('moveRight');
         }
 
         if(!keyLeft.isDown && !keyRight.isDown) {
             this.player.setVelocityX(0);
-            /*if(this.player.direction == 0) {
+            if(this.player.direction == 0) {
                 this.player.anims.play('idleLeft');
             } else if(this.player.direction == 1) {
                 this.player.anims.play('idleRight');
-            }*/
+            }
         }
 
         // jump logic
         if(Phaser.Input.Keyboard.JustDown(spaceBar) && this.player.jumpCount > 0) {
-            this.player.setVelocityY(-500);
-            this.player.jumpState = 1;
-            this.player.jumpCount = 0;
-            this.sound.play("jump");
+            if(this.player.direction == 0) {
+                this.player.setVelocityY(-500);
+                this.player.jumpState = 1;
+                this.player.jumpCount = 0;
+                this.sound.play("jump", {volume: 0.5});
+                this.player.anims.play("jumpLeft");
+            } else if(this.player.direction == 1) {
+                this.player.setVelocityY(-500);
+                this.player.jumpState = 1;
+                this.player.jumpCount = 0;
+                this.sound.play("jump", {volume: 0.5});
+                this.player.anims.play("jumpRight");
+            }
         }
 
         if(this.player.jumpState = 1) {
@@ -152,7 +185,7 @@ class FirstLevel extends Phaser.Scene {
 
         if(keyA.isDown) {
             this.player.anims.play('attackRight');
-        }
+        }*/
 
         if(visible) {
             this.teleport.setVisible(visible);
