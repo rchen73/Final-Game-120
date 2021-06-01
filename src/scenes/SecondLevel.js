@@ -5,15 +5,16 @@ class SecondLevel extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image("secondBG", "./assets/secondBG.png");
     }
 
     create() {
+        // define background
+        let bg = this.add.image(0, 0, 'secondBG').setOrigin(0, 0);
+
         // define player 
-        this.player = this.physics.add.sprite(220, 550, "player");
-        this.player.setGravityY(900);
+        this.player = new Player(this, 350, 550, 'player');
         this.player.setCollideWorldBounds(true);
-        this.player.jumpState = 0;
-        this.player.jumpCount = 1;
 
         // define keys
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -22,20 +23,31 @@ class SecondLevel extends Phaser.Scene {
 
         // define platforms
         var platforms = this.physics.add.staticGroup();
-        platforms.create(200, 640, 'ground');
-        platforms.create(600, 640, 'ground');
-        platforms.create(750, 640, 'ground');
-        platforms.create(920, 520, 'ground');
-        platforms.create(720, 400, 'ground');
-        platforms.create(320, 400, 'ground');
-        platforms.create(60, 280, 'ground');
-        platforms.create(60, 520, 'ground');
-        platforms.create(1000, 280, 'ground');
+        platforms.create(330, 660, 'ground');
+        platforms.create(500, 560, 'ground');
+        platforms.create(330, 430, 'ground');
+        platforms.create(560, 320, 'ground');
+        platforms.create(380, 190, 'ground');
+        platforms.create(940, 560, 'ground');
+        platforms.create(900, 670, 'ground');
+        platforms.create(740, 430, 'ground');
+        platforms.create(920, 300, 'ground');
+        platforms.create(740, 170, 'ground');
 
+        // collision with platforms
         this.touchGround = this.physics.add.collider(this.player, platforms);
 
+        // define walls
+        var walls = this.physics.add.staticGroup();
+        walls.create(240, 350, 'wall');
+        walls.create(970, 350, 'wall');
+        walls.create(650, 110, 'wall');
+
+        // collision with walls
+        this.touchWalls = this.physics.add.collider(this.player, walls);
+
         // next scene
-        this.teleport = this.physics.add.sprite(950, 100, "ground");
+        this.teleport = this.physics.add.sprite(720, 100, "door");
         this.teleport.body.setImmovable(true);
 
         nextTrue = false;
@@ -46,37 +58,7 @@ class SecondLevel extends Phaser.Scene {
     }
 
     update() {
-        // left/right movement
-        if(keyLeft.isDown) {
-            this.player.setVelocityX(-400);
-        } else if(keyRight.isDown) {
-            this.player.setVelocityX(400);
-        }
-
-        if(!keyLeft.isDown && !keyRight.isDown) {
-            this.player.setVelocityX(0);
-        }
-
-        // jump logic
-        if(Phaser.Input.Keyboard.JustDown(spaceBar) && this.player.jumpCount > 0) {
-            this.player.setVelocityY(-500);
-            this.player.jumpState = 1;
-            this.player.jumpCount = 0;
-            this.sound.play("jump");
-        }
-
-        if(this.player.jumpState = 1) {
-            if(this.player.body.velocity.y >= 0) {
-                this.player.jumpState = 2;
-            }
-        }
-
-        if(this.player.jumpState == 2) {
-            if(this.player.body.velocity.y == 0) {
-                this.player.jumpState == 0;
-                this.player.jumpCount = 1;
-            }
-        }
+        this.player.update();
 
         if(nextTrue && level == 2) {
             level = 3;

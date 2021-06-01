@@ -1,10 +1,11 @@
 // Player prefab
-class Player extends Phaser.Physics.Arcade.Sprite{
+class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene,x,y,texture,frame){
         super(scene,x,y,texture,frame);
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+        this.setGravityY(900);
         this.jumpState = 0;
         this.jumpCount = 1;
         this.direction = 1;
@@ -48,6 +49,18 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             frames: this.anims.generateFrameNumbers('attackRight', {start: 0, end: 9, first: 0}),
             frameRate: 20,
         });
+
+        this.anims.create({
+            key: 'jumpLeft',
+            frames: this.anims.generateFrameNumbers('jumpLeft', {start: 0, end: 6, first: 0}),
+            frameRate: 20
+        });
+
+        this.anims.create({
+            key: 'jumpRight',
+            frames: this.anims.generateFrameNumbers('jumpRight', {start: 0, end: 6, first: 0}),
+            frameRate: 20
+        });
     }
     create(){
     }
@@ -77,11 +90,20 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         }
 
         // jump logic
-        if(Phaser.Input.Keyboard.JustDown(spaceBar) && this.jumpCount > 0) {
-            this.setVelocityY(-500);
-            this.jumpState = 1;
-            this.jumpCount = 0;
-            this.sfx.play();
+        if(Phaser.Input.Keyboard.JustDown(spaceBar) && this.jumpCount > 0 && this.body.touching.down) {
+            if(this.direction == 0) {
+                this.setVelocityY(-500);
+                this.jumpState = 1;
+                this.jumpCount = 0;
+                this.sfx.play({volume: 0.5});
+                this.anims.play("jumpLeft");
+            } else if(this.direction == 1) {
+                this.setVelocityY(-500);
+                this.jumpState = 1;
+                this.jumpCount = 0;
+                this.sfx.play({volume: 0.5});
+                this.anims.play("jumpRight");
+            }
         }
 
         if(this.jumpState = 1) {
