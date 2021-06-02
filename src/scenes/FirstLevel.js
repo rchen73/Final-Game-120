@@ -50,7 +50,7 @@ class FirstLevel extends Phaser.Scene {
         // define walls
         var walls = this.physics.add.staticGroup();
         walls.create(240, 100, 'wall');
-        walls.create(980, 330, 'wall');
+        walls.create(980, 275, 'wall');
         walls.create(-30, 330, 'wall').setDepth(-1);
 
         // collision with walls
@@ -62,7 +62,7 @@ class FirstLevel extends Phaser.Scene {
         visible = false;
         this.teleport.setVisible(visible);
 
-        this.key = this.physics.add.sprite(340, 150, "key");
+        this.key = this.physics.add.sprite(330, 150, "key");
         this.key.body.setImmovable(true);
         this.physics.add.overlap(this.player, this.key, function () {
             visible = true;

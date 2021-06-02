@@ -5,15 +5,15 @@ class ThirdLevel extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image("thirdBG", "./assets/thirdBG.png");
     }
 
     create() {
+        // define background
+        let bg = this.add.image(0, 0, 'thirdBG').setOrigin(0, 0);
+
         // define player 
-        this.player = this.physics.add.sprite(200, 380, "player");
-        this.player.setGravityY(900);
-        this.player.setCollideWorldBounds(true);
-        this.player.jumpState = 0;
-        this.player.jumpCount = 1;
+        this.player = new Player(this, 330, 550, 'player');
 
         // define keys
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -22,18 +22,37 @@ class ThirdLevel extends Phaser.Scene {
 
         // define platforms
         var platforms = this.physics.add.staticGroup();
-        platforms.create(200, 640, 'ground');
-        platforms.create(600, 640, 'ground');
-        platforms.create(950, 640, 'ground');
-        platforms.create(1220, 520, 'ground');
-        platforms.create(920, 400, 'ground');
-        platforms.create(1200, 280, 'ground');
+        platforms.create(335, 690, 'ground');
+        platforms.create(500, 590, 'ground');
+        platforms.create(335, 460, 'ground');
+        platforms.create(480, 370, 'ground');
+        platforms.create(840, 490, 'ground');
+        platforms.create(875, 360, 'ground');
+        platforms.create(700, 230, 'ground');
+        platforms.create(350, 140, 'ground');
 
+        // collision with platforms
         this.touchGround = this.physics.add.collider(this.player, platforms);
 
+        // define walls
+        var walls = this.physics.add.staticGroup();
+        walls.create(235, 390, 'wall');
+        walls.create(965, 390, 'wall');
+
+        // collision with walls
+        this.touchWalls = this.physics.add.collider(this.player, walls);
+
         // next scene
-        this.teleport = this.physics.add.sprite(950, 100, "ground");
+        this.teleport = this.physics.add.sprite(330, 70, "door");
         this.teleport.body.setImmovable(true);
+        visible = false;
+        this.teleport.setVisible(visible);
+
+        this.key = this.physics.add.sprite(335, 410, "key");
+        this.key.body.setImmovable(true);
+        this.physics.add.overlap(this.player, this.key, function () {
+            visible = true;
+        });
 
         nextTrue = false;
         this.physics.add.overlap(this.player, this.teleport, function () {
@@ -43,44 +62,19 @@ class ThirdLevel extends Phaser.Scene {
     }
 
     update() {
-        // left/right movement
-        if(keyLeft.isDown) {
-            this.player.setVelocityX(-400);
-        } else if(keyRight.isDown) {
-            this.player.setVelocityX(400);
+        this.player.update();
+
+        if(visible) {
+            this.teleport.setVisible(visible);
+            this.key.setVisible(false);
         }
 
-        if(!keyLeft.isDown && !keyRight.isDown) {
-            this.player.setVelocityX(0);
+        if(nextTrue && level == 3) {
+            level = 4;
+            this.scene.start('FourthLevel');
         }
 
-        // jump logic
-        if(Phaser.Input.Keyboard.JustDown(spaceBar) && this.player.jumpCount > 0) {
-            this.player.setVelocityY(-500);
-            this.player.jumpState = 1;
-            this.player.jumpCount = 0;
-            this.sound.play("jump");
-        }
-
-        if(this.player.jumpState = 1) {
-            if(this.player.body.velocity.y >= 0) {
-                this.player.jumpState = 2;
-            }
-        }
-
-        if(this.player.jumpState == 2) {
-            if(this.player.body.velocity.y == 0) {
-                this.player.jumpState == 0;
-                this.player.jumpCount = 1;
-            }
-        }
-
-        /*if(nextTrue && level == 2) {
-            level = 3;
-            this.scene.start('SecondLevel');
-        }*/
-
-        if (this.player.y > 600 && level == 3) {
+        if (this.player.y > 700 && level == 3) {
             level = 2;
             this.scene.start('SecondLevel');
         }

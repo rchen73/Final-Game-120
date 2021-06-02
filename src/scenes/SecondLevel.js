@@ -14,8 +14,7 @@ class SecondLevel extends Phaser.Scene {
 
         // define player 
         this.player = new Player(this, 350, 550, 'player');
-        this.player.setCollideWorldBounds(true);
-
+        
         // define keys
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -23,32 +22,41 @@ class SecondLevel extends Phaser.Scene {
 
         // define platforms
         var platforms = this.physics.add.staticGroup();
-        platforms.create(330, 660, 'ground');
-        platforms.create(500, 560, 'ground');
-        platforms.create(330, 430, 'ground');
-        platforms.create(560, 320, 'ground');
-        platforms.create(380, 190, 'ground');
-        platforms.create(940, 560, 'ground');
-        platforms.create(900, 670, 'ground');
-        platforms.create(740, 430, 'ground');
-        platforms.create(920, 300, 'ground');
-        platforms.create(740, 170, 'ground');
+        platforms.create(330, 690, 'ground');
+        platforms.create(480, 590, 'ground');
+        platforms.create(330, 460, 'ground');
+        platforms.create(560, 350, 'ground');
+        platforms.create(380, 220, 'ground');
+        platforms.create(600, 120, 'ground');
+        platforms.create(940, 590, 'ground');
+        platforms.create(890, 720, 'ground');
+        platforms.create(740, 460, 'ground');
+        platforms.create(920, 330, 'ground');
+        platforms.create(740, 200, 'ground');
 
         // collision with platforms
         this.touchGround = this.physics.add.collider(this.player, platforms);
 
         // define walls
         var walls = this.physics.add.staticGroup();
-        walls.create(240, 350, 'wall');
-        walls.create(970, 350, 'wall');
-        walls.create(650, 110, 'wall');
+        walls.create(240, 390, 'wall');
+        walls.create(970, 390, 'wall');
+        walls.create(650, 85, 'wall');
 
         // collision with walls
         this.touchWalls = this.physics.add.collider(this.player, walls);
 
         // next scene
-        this.teleport = this.physics.add.sprite(720, 100, "door");
+        this.teleport = this.physics.add.sprite(725, 130, "door");
         this.teleport.body.setImmovable(true);
+        visible = false;
+        this.teleport.setVisible(visible);
+
+        this.key = this.physics.add.sprite(590, 70, "key");
+        this.key.body.setImmovable(true);
+        this.physics.add.overlap(this.player, this.key, function () {
+            visible = true;
+        });
 
         nextTrue = false;
         this.physics.add.overlap(this.player, this.teleport, function () {
@@ -59,6 +67,11 @@ class SecondLevel extends Phaser.Scene {
 
     update() {
         this.player.update();
+
+        if(visible) {
+            this.teleport.setVisible(visible);
+            this.key.setVisible(false);
+        }
 
         if(nextTrue && level == 2) {
             level = 3;
