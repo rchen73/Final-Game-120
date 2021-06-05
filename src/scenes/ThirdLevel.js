@@ -19,6 +19,7 @@ class ThirdLevel extends Phaser.Scene {
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
         // define platforms
         var platforms = this.physics.add.staticGroup();
@@ -59,6 +60,7 @@ class ThirdLevel extends Phaser.Scene {
             nextTrue = true;
         });
 
+        this.cameras.main.fadeIn(1000);
     }
 
     update() {
@@ -74,7 +76,7 @@ class ThirdLevel extends Phaser.Scene {
             this.scene.start('FourthLevel');
         }
 
-        if (this.player.y > 700 && level == 3) {
+        if(this.player.y > 700 && level == 3) {
             level = 2;
             this.scene.start('SecondLevel');
         }

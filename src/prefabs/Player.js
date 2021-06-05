@@ -9,6 +9,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.jumpState = 0;
         this.jumpCount = 1;
         this.direction = 1;
+        this.attacking = false;
 
         this.sfx = scene.sound.add('jump');
         
@@ -39,29 +40,30 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         });
 
         this.anims.create({
-            key: 'attackLight',
+            key: 'attackLeft',
             frames: this.anims.generateFrameNumbers('attackLeft', {start: 0, end: 9, first: 0}),
-            frameRate: 20,
+            frameRate: 20
         });
 
         this.anims.create({
             key: 'attackRight',
             frames: this.anims.generateFrameNumbers('attackRight', {start: 0, end: 9, first: 0}),
-            frameRate: 20,
+            frameRate: 20
         });
 
         this.anims.create({
             key: 'jumpLeft',
             frames: this.anims.generateFrameNumbers('jumpLeft', {start: 0, end: 6, first: 0}),
-            frameRate: 20
+            frameRate: 10
         });
 
         this.anims.create({
             key: 'jumpRight',
             frames: this.anims.generateFrameNumbers('jumpRight', {start: 0, end: 6, first: 0}),
-            frameRate: 20
+            frameRate: 10
         });
     }
+    
     create(){
     }
 
@@ -80,7 +82,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.anims.play('moveRight');
         }
 
-        if(!keyLeft.isDown && !keyRight.isDown) {
+        if(!keyLeft.isDown && !keyRight.isDown && !spaceBar.isDown && this.body.touching.down && !this.attacking) {
             this.setVelocityX(0);
             if(this.direction == 0) {
                 this.anims.play('idleLeft');
@@ -120,7 +122,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         if(keyA.isDown) {
-            this.anims.play('attackRight');
+            this.attacking = true;
+            if(this.direction == 0) {
+                this.anims.play('attackLeft');
+            } else if(this.direction == 1) {
+                this.anims.play('attackRight');
+            }
+            this.scene.time.delayedCall(500, () => {
+                this.attacking = false;
+            }, null, this);
         }
     }
 }

@@ -57,7 +57,7 @@ class FirstLevel extends Phaser.Scene {
         this.touchWalls = this.physics.add.collider(this.player, walls);
 
         // next scene
-        this.teleport = this.physics.add.sprite(880, 660, "door");
+        this.teleport = this.physics.add.sprite(880, 60, "door");
         this.teleport.body.setImmovable(true);
         visible = false;
         this.teleport.setVisible(visible);
@@ -74,6 +74,8 @@ class FirstLevel extends Phaser.Scene {
         });
 
         level = 1;
+
+        this.cameras.main.fadeIn(1000);
     }
 
     update() {

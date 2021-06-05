@@ -1,15 +1,15 @@
-class Title extends Phaser.Scene {
+class GameOver extends Phaser.Scene {
     constructor() {
-        super("Title");
+        super("GameOver");
     }
 
     preload() {
-        this.load.image("titleBG", "./assets/titleBG.png");
+        this.load.image("gameOver", "./assets/gameOver.png");
     }
 
     create() {
         // define background
-        let bg = this.add.image(0, 0, 'titleBG').setOrigin(0, 0);
+        let bg = this.add.image(0, 0, 'gameOver').setOrigin(0, 0);
         
         // define key
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -19,7 +19,7 @@ class Title extends Phaser.Scene {
 
     update() {
         if (Phaser.Input.Keyboard.JustDown(spaceBar)) {
-            this.scene.start('FirstLevel');
+            this.scene.start('Title');
         }
     }
 }

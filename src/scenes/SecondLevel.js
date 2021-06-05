@@ -19,6 +19,7 @@ class SecondLevel extends Phaser.Scene {
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
         // define platforms
         var platforms = this.physics.add.staticGroup();
@@ -63,6 +64,7 @@ class SecondLevel extends Phaser.Scene {
             nextTrue = true;
         });
 
+        this.cameras.main.fadeIn(1000);
     }
 
     update() {
@@ -78,7 +80,7 @@ class SecondLevel extends Phaser.Scene {
             this.scene.start('ThirdLevel');
         }
 
-        if (this.player.y > 700 && level == 2) {
+        if(this.player.y > 700 && level == 2) {
             level = 1;
             this.scene.start('FirstLevel');
         }
