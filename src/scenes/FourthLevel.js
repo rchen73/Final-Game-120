@@ -125,6 +125,7 @@ class FourthLevel extends Phaser.Scene {
         // boss death transition
         if(this.bossHP == 0) {
             this.boss.destroy();
+            this.fire.destroy();
             this.time.delayedCall(2000, () => {
                 this.playBGM.stop();
                 this.scene.start('GameOver');
