@@ -56,36 +56,42 @@ class FirstLevel extends Phaser.Scene {
         // collision with walls
         this.touchWalls = this.physics.add.collider(this.player, walls);
 
-        // next scene
+        // scene transition object
         this.teleport = this.physics.add.sprite(880, 60, "door");
         this.teleport.body.setImmovable(true);
         visible = false;
         this.teleport.setVisible(visible);
 
+        // unlock transition object
         this.key = this.physics.add.sprite(330, 150, "key");
         this.key.body.setImmovable(true);
         this.physics.add.overlap(this.player, this.key, function () {
             visible = true;
         });
 
+        // collision with transition object
         nextTrue = false;
         this.physics.add.overlap(this.player, this.teleport, function () {
             nextTrue = true;
         });
 
+        // scene logic
         level = 1;
 
+        // fade scene transition
         this.cameras.main.fadeIn(1000);
     }
 
     update() {
         this.player.update();
 
+        // transition object visibility
         if(visible) {
             this.teleport.setVisible(visible);
             this.key.setVisible(false);
         }
 
+        // next scene
         if(nextTrue && level == 1) {
             level = 2;
             this.scene.start('SecondLevel');

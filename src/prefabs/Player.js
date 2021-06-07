@@ -5,14 +5,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+        // setting up player physics and logic
         this.setGravityY(900);
         this.jumpState = 0;
         this.jumpCount = 1;
         this.direction = 1;
         this.attacking = false;
-
-        this.sfx = scene.sound.add('jump');
         
+        // player animations
         this.anims.create({
             key: 'idleLeft',
             frames: [{key: 'left', frame: 0}],
@@ -63,11 +63,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             frameRate: 10
         });
     }
-    
-    create(){
-    }
 
     update(){
+        // left/right movement logic
         if(keyLeft.isDown) {
             this.setVelocityX(-400);
             this.direction = 0;
@@ -82,6 +80,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.anims.play('moveRight');
         }
 
+        // idle logic
         if(!keyLeft.isDown && !keyRight.isDown && !spaceBar.isDown && this.body.touching.down && !this.attacking) {
             this.setVelocityX(0);
             if(this.direction == 0) {
@@ -97,23 +96,23 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.setVelocityY(-500);
                 this.jumpState = 1;
                 this.jumpCount = 0;
-                this.sfx.play({volume: 0.5});
                 this.anims.play("jumpLeft");
             } else if(this.direction == 1) {
                 this.setVelocityY(-500);
                 this.jumpState = 1;
                 this.jumpCount = 0;
-                this.sfx.play({volume: 0.5});
                 this.anims.play("jumpRight");
             }
         }
 
+        // up logic
         if(this.jumpState = 1) {
             if(this.body.velocity.y >= 0) {
                 this.jumpState = 2;
             }
         }
 
+        // down logic
         if(this.jumpState == 2) {
             if(this.body.velocity.y == 0) {
                 this.jumpState == 0;
@@ -121,6 +120,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
+        // attack logic
         if(keyA.isDown) {
             this.attacking = true;
             if(this.direction == 0) {

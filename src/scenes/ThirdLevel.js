@@ -43,39 +43,51 @@ class ThirdLevel extends Phaser.Scene {
         // collision with walls
         this.touchWalls = this.physics.add.collider(this.player, walls);
 
-        // next scene
+        // scene transition object
         this.teleport = this.physics.add.sprite(330, 70, "door");
         this.teleport.body.setImmovable(true);
         visible = false;
         this.teleport.setVisible(visible);
 
+        // unlock transition object
         this.key = this.physics.add.sprite(335, 410, "key");
         this.key.body.setImmovable(true);
         this.physics.add.overlap(this.player, this.key, function () {
             visible = true;
         });
 
+        // collision with transition object
         nextTrue = false;
         this.physics.add.overlap(this.player, this.teleport, function () {
             nextTrue = true;
         });
 
+        // fade scene transition
         this.cameras.main.fadeIn(1000);
     }
 
     update() {
         this.player.update();
 
+        if(fourthFall) {
+            bgm.play();
+            fourthFall = false;
+        }
+
+        // transition object visibility
         if(visible) {
             this.teleport.setVisible(visible);
             this.key.setVisible(false);
         }
 
+        // next scene
         if(nextTrue && level == 3) {
             level = 4;
             this.scene.start('FourthLevel');
+            bgm.stop();
         }
 
+        // falling to previous scene
         if(this.player.y > 700 && level == 3) {
             level = 2;
             this.scene.start('SecondLevel');

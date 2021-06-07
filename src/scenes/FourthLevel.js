@@ -7,19 +7,31 @@ class FourthLevel extends Phaser.Scene {
     preload() {
         this.load.image("bossBG", "./assets/bossBG.png");
         this.load.spritesheet('boss', './assets/boss.png', {frameWidth: 200, frameHeight: 240, startFrame: 0, endFrame: 23});
+        this.load.image("fire", "./assets/fire.png");
+        this.load.audio('sword', './assets/sword.wav');
+        this.load.audio('sizzle', './assets/sizzle.mp3');
+        this.load.audio('death', './assets/death.mp3');
+        this.load.audio('battle', './assets/battle.wav');
     }
 
     create() {
         // define background
         let bg = this.add.image(0, 0, 'bossBG').setOrigin(0, 0);
 
+        // play background music
+        this.playBGM = this.sound.add('battle', {volume: 0.5, loop: true });
+        this.playBGM.play();
+
         // define player 
         this.player = new Player(this, 370, 520, 'player');
+
+        playerHP = 50;
 
         // define boss
         this.boss = this.physics.add.sprite(600, 400, "boss");
         this.boss.body.setImmovable(true);
 
+        // boss animation
         this.anims.create({
             key: 'attack',
             frames: this.anims.generateFrameNumbers('boss', {start: 0, end: 23, first: 0}),
@@ -29,7 +41,17 @@ class FourthLevel extends Phaser.Scene {
 
         this.boss.anims.play('attack');
 
-        this.health = 1000;
+        // boss HP
+        this.bossHP = 100;
+
+        // fire attack
+        this.fire = this.physics.add.sprite(100, 300, 'fire').setBounce(1).setVelocityX(500).setDepth(1).setCollideWorldBounds(true);
+
+        // collision with fire attack
+        hitByFire = false;
+        this.physics.add.overlap(this.player, this.fire, function () {
+            hitByFire = true;
+        });
 
         // define keys
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -59,24 +81,52 @@ class FourthLevel extends Phaser.Scene {
         // collision with boss
         this.hitBoss = this.physics.add.collider(this.player, this.boss);
 
+        // bgm change logic
+        fourthFall = false;
+
+        // fade scene transition
         this.cameras.main.fadeIn(1000);
     }
 
     update() {
         this.player.update();
 
+        // falling to previous scene
         if(this.player.y > 700 && level == 4) {
             level = 3;
             this.scene.start('ThirdLevel');
+            this.playBGM.stop();
+            fourthFall = true;
+        }
+        
+        // hitting boss
+        if(Phaser.Input.Keyboard.JustDown(keyA) && this.hitBoss) {
+            this.bossHP -= 1;
+            this.sound.play('sword');
         }
 
-        if(keyA.isDown && this.hitBoss) {
-            this.health -= 1;
+        // fire hitting player
+        if(hitByFire) {
+            hitByFire = false;
+            playerHP -= 1;
+            this.sound.play('sizzle', {volume: 0.1});
         }
 
-        if(this.health == 0) {
+        // player death transition
+        if(playerHP == 0) {
+            this.sound.play('death', {volume: 0.3});
+            this.player.setVisible(false);
+            this.time.delayedCall(2000, () => {
+                this.playBGM.stop();
+                this.scene.start('GameOver');
+            });
+        }
+
+        // boss death transition
+        if(this.bossHP == 0) {
             this.boss.destroy();
-            this.time.delayedCall(3000, () => {
+            this.time.delayedCall(2000, () => {
+                this.playBGM.stop();
                 this.scene.start('GameOver');
             });
         }
